@@ -1950,7 +1950,7 @@ class PointGraph(Graph, PointCloud):
 
     def _view_3d(self, figure_id=None, new_figure=False, render_lines=True,
                  line_colour=(1, 0, 0), line_width=4, render_markers=True,
-                 marker_type='sphere', marker_size=1.0,
+                 marker_style='sphere', marker_size=1.0,
                  marker_colour=(1, 0, 0), marker_resolution=8, alpha=1.0):
         r"""
         Visualization of the PointGraph in 3D.
@@ -1965,12 +1965,12 @@ class PointGraph(Graph, PointCloud):
             If ``True``, then the lines will be rendered.
         line_colour : `(float, float, float)`, optional
             The colour of the lines as a tuple of RGB values.
-        line_width : `int`, optional
+        line_width : `float`, optional
             The width of the lines.
         render_markers : `bool`, optional
             If ``True``, then the markers will be rendered.
-        marker_type : `str`, optional
-            The type of the markers.
+        marker_style : `str`, optional
+            The style of the markers.
             Example options ::
 
                 {2darrow, 2dcircle, 2dcross, 2ddash, 2ddiamond, 2dhooked_arrow,
@@ -2000,7 +2000,7 @@ class PointGraph(Graph, PointCloud):
                                       self.edges).render(
                 render_lines=render_lines, line_colour=line_colour,
                 line_width=line_width, render_markers=render_markers,
-                marker_type=marker_type, marker_size=marker_size,
+                marker_style=marker_style, marker_size=marker_size,
                 marker_colour=marker_colour,
                 marker_resolution=marker_resolution, alpha=alpha)
         except ImportError:

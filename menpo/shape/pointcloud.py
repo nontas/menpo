@@ -767,7 +767,7 @@ class PointCloud(Shape):
 
         return landmark_view
 
-    def _view_3d(self, figure_id=None, new_figure=False, marker_type='sphere',
+    def _view_3d(self, figure_id=None, new_figure=False, marker_style='sphere',
                  marker_size=1.0, marker_colour=(1, 0, 0), marker_resolution=8,
                  alpha=1.0):
         r"""
@@ -779,8 +779,8 @@ class PointCloud(Shape):
             The id of the figure to be used.
         new_figure : `bool`, optional
             If ``True``, a new figure is created.
-        marker_type : `str`, optional
-            The type of the markers.
+        marker_style : `str`, optional
+            The style of the markers.
             Example options ::
 
                 {2darrow, 2dcircle, 2dcross, 2ddash, 2ddiamond, 2dhooked_arrow,
@@ -808,7 +808,7 @@ class PointCloud(Shape):
             from menpo3d.visualize import PointCloudViewer3d
             return PointCloudViewer3d(figure_id, new_figure,
                                       self.points).render(
-                marker_type=marker_type, marker_size=marker_size,
+                marker_style=marker_style, marker_size=marker_size,
                 marker_colour=marker_colour,
                 marker_resolution=marker_resolution, alpha=alpha)
         except ImportError:
