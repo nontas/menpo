@@ -769,7 +769,7 @@ class PointCloud(Shape):
 
     def _view_3d(self, figure_id=None, new_figure=False, marker_style='sphere',
                  marker_size=1.0, marker_colour=(1, 0, 0), marker_resolution=8,
-                 alpha=1.0):
+                 step=None, alpha=1.0):
         r"""
         Visualization of the PointCloud in 3D.
 
@@ -796,6 +796,9 @@ class PointCloud(Shape):
         marker_resolution : `int`, optional
             The resolution of the markers. For spheres, for instance, this is
             the number of divisions along theta and phi.
+        step : `int` or ``None``, optional
+            If `int`, then one every `step` vertexes will be rendered.
+            If ``None``, then all vertexes will be rendered.
         alpha : `float`, optional
             Defines the transparency (opacity) of the object.
 
@@ -810,7 +813,7 @@ class PointCloud(Shape):
                                       self.points).render(
                 marker_style=marker_style, marker_size=marker_size,
                 marker_colour=marker_colour,
-                marker_resolution=marker_resolution, alpha=alpha)
+                marker_resolution=marker_resolution, step=step, alpha=alpha)
         except ImportError:
             from menpo.visualize import Menpo3dMissingError
             raise Menpo3dMissingError()

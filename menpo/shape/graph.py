@@ -1951,7 +1951,8 @@ class PointGraph(Graph, PointCloud):
     def _view_3d(self, figure_id=None, new_figure=False, render_lines=True,
                  line_colour=(1, 0, 0), line_width=4, render_markers=True,
                  marker_style='sphere', marker_size=1.0,
-                 marker_colour=(1, 0, 0), marker_resolution=8, alpha=1.0):
+                 marker_colour=(1, 0, 0), marker_resolution=8, step=None,
+                 alpha=1.0):
         r"""
         Visualization of the PointGraph in 3D.
 
@@ -1986,6 +1987,9 @@ class PointGraph(Graph, PointCloud):
         marker_resolution : `int`, optional
             The resolution of the markers. For spheres, for instance, this is
             the number of divisions along theta and phi.
+        step : `int` or ``None``, optional
+            If `int`, then one every `step` vertexes will be rendered.
+            If ``None``, then all vertexes will be rendered.
         alpha : `float`, optional
             Defines the transparency (opacity) of the object.
 
@@ -2001,7 +2005,7 @@ class PointGraph(Graph, PointCloud):
                 render_lines=render_lines, line_colour=line_colour,
                 line_width=line_width, render_markers=render_markers,
                 marker_style=marker_style, marker_size=marker_size,
-                marker_colour=marker_colour,
+                marker_colour=marker_colour, step=step,
                 marker_resolution=marker_resolution, alpha=alpha)
         except ImportError:
             from menpo.visualize import Menpo3dMissingError
@@ -2980,7 +2984,7 @@ def _isolated_vertices(adjacency_matrix):
 
 def _convert_edges_to_adjacency_matrix(edges, n_vertices):
     r"""
-    Converts an edges array to and adjacency matrix.
+    Converts an edges array to an adjacency matrix.
 
     Parameters
     ----------
@@ -3011,7 +3015,7 @@ def _convert_edges_to_adjacency_matrix(edges, n_vertices):
 
 def _convert_edges_to_symmetric_adjacency_matrix(edges, n_vertices):
     r"""
-    Converts an edges array to and adjacency matrix.
+    Converts an edges array to an adjacency matrix.
 
     Parameters
     ----------

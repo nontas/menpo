@@ -742,7 +742,10 @@ class TriMesh(PointCloud):
 
     def _view_3d(self, figure_id=None, new_figure=False, mesh_type='wireframe',
                  line_width=2, colour=(1, 0, 0), marker_style='sphere',
-                 marker_size=0.05, marker_resolution=8, alpha=1.0, **kwargs):
+                 marker_size=0.05, marker_resolution=8, normals=None,
+                 normals_colour=(0, 0, 0), normals_line_width=2,
+                 normals_marker_style='2darrow', normals_marker_resolution=8,
+                 normals_marker_size=0.05, step=None, alpha=1.0):
         r"""
         Visualization of the TriMesh in 3D.
 
@@ -778,6 +781,38 @@ class TriMesh(PointCloud):
             The resolution of the markers. For spheres, for instance, this is
             the number of divisions along theta and phi. It only applies for
             the 'fancymesh'.
+        normals : ``(n_points, 3)`` `ndarray` or ``None``, optional
+            If ``None``, then the normals will not be rendered. If `ndarray`,
+            then the provided normals will be rendered as well. Note that a
+            normal must be provided for each point in the TriMesh.
+        normals_colour : `(float, float, float)`, optional
+            The colour of the normals as a tuple of RGB values. It only applies
+            if `normals` is not ``None``.
+        normals_line_width : `float`, optional
+            The width of the lines of the normals. It only applies if `normals`
+            is not ``None``.
+        normals_marker_style : `str`, optional
+            The style of the markers of the normals. It only applies if `normals`
+            is not ``None``.
+            Example options ::
+
+                {2darrow, 2dcircle, 2dcross, 2ddash, 2ddiamond, 2dhooked_arrow,
+                 2dsquare, 2dthick_arrow, 2dthick_cross, 2dtriangle, 2dvertex,
+                 arrow, axes, cone, cube, cylinder, point, sphere}
+
+        normals_marker_resolution : `int`, optional
+            The resolution of the markers of the normals. For spheres, for
+            instance, this is the number of divisions along theta and phi. It
+            only applies if `normals` is not ``None``.
+        normals_marker_size : `float`, optional
+            The size of the markers. This size can be seen as a scale factor
+            applied to the size markers, which is by default calculated from
+            the inter-marker spacing. It only applies if `normals` is not
+            ``None``.
+        step : `int` or ``None``, optional
+            If `int`, then one every `step` markers will be rendered.
+            If ``None``, then all vertexes will be rendered. It only applies for
+            the 'fancymesh' and if `normals` is not ``None``.
         alpha : `float`, optional
             Defines the transparency (opacity) of the object.
 
@@ -792,7 +827,12 @@ class TriMesh(PointCloud):
                                    self.points, self.trilist).render(
                 mesh_type=mesh_type, line_width=line_width, colour=colour,
                 marker_size=marker_size, marker_resolution=marker_resolution,
-                marker_style=marker_style, alpha=alpha, **kwargs)
+                marker_style=marker_style, normals=normals,
+                normals_colour=normals_colour,
+                normals_line_width=normals_line_width,
+                normals_marker_style=normals_marker_style,
+                normals_marker_resolution=normals_marker_resolution,
+                normals_marker_size=normals_marker_size, step=step, alpha=alpha)
         except ImportError:
             from menpo.visualize import Menpo3dMissingError
             raise Menpo3dMissingError()
