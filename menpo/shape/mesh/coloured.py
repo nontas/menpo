@@ -163,9 +163,13 @@ class ColouredTriMesh(TriMesh):
             return ctm
 
     def _view_3d(self, figure_id=None, new_figure=False, coloured=True,
-                 **kwargs):
+                 mesh_type='surface', mesh_colour=(1, 0, 0), line_width=2,
+                 ambient_light=0.0, specular_light=0.0, normals=None,
+                 normals_colour=(0, 0, 0), normals_line_width=2,
+                 normals_marker_style='2darrow', normals_marker_resolution=8,
+                 normals_marker_size=0.05, step=None, alpha=1.0):
         r"""
-        Visualize the :map:`ColouredTriMesh` in 3D.
+        Visualize the Coloured TriMesh in 3D.
 
         Parameters
         ----------
@@ -174,26 +178,86 @@ class ColouredTriMesh(TriMesh):
         new_figure : `bool`, optional
             If ``True``, a new figure is created.
         coloured : `bool`, optional
-            If `True`, render the colours.
+            If ``True``, then the colour per vertex is rendered. If ``False``,
+            then only the TriMesh is rendered with the specified `colour`.
+        mesh_type : ``{'surface', 'wireframe'}``, optional
+            The representation type to be used for the mesh.
+        mesh_colour : `(float, float, float)`, optional
+            The colour of the mesh as a tuple of RGB values. It only applies if
+            `coloured` is ``False``.
+        line_width : `float`, optional
+            The width of the lines, if there are any.
+        ambient_light : `float`, optional
+            The ambient light intensity. It must be in range ``[0., 1.]``.
+        specular_light : `float`, optional
+            The specular light intensity. It must be in range ``[0., 1.]``.
+        normals : ``(n_points, 3)`` `ndarray` or ``None``, optional
+            If ``None``, then the normals will not be rendered. If `ndarray`,
+            then the provided normals will be rendered as well. Note that a
+            normal must be provided for each point in the TriMesh.
+        normals_colour : `(float, float, float)`, optional
+            The colour of the normals as a tuple of RGB values. It only applies
+            if `normals` is not ``None``.
+        normals_line_width : `float`, optional
+            The width of the lines of the normals. It only applies if `normals`
+            is not ``None``.
+        normals_marker_style : `str`, optional
+            The style of the markers of the normals. It only applies if `normals`
+            is not ``None``.
+            Example options ::
+
+                {2darrow, 2dcircle, 2dcross, 2ddash, 2ddiamond, 2dhooked_arrow,
+                 2dsquare, 2dthick_arrow, 2dthick_cross, 2dtriangle, 2dvertex,
+                 arrow, axes, cone, cube, cylinder, point, sphere}
+
+        normals_marker_resolution : `int`, optional
+            The resolution of the markers of the normals. For spheres, for
+            instance, this is the number of divisions along theta and phi. It
+            only applies if `normals` is not ``None``.
+        normals_marker_size : `float`, optional
+            The size of the markers. This size can be seen as a scale factor
+            applied to the size markers, which is by default calculated from
+            the inter-marker spacing. It only applies if `normals` is not
+            ``None``.
+        step : `int` or ``None``, optional
+            If `int`, then one every `step` normals will be rendered.
+            If ``None``, then all vertexes will be rendered. It only applies if
+            `normals` is not ``None``.
+        alpha : `float`, optional
+            Defines the transparency (opacity) of the object.
 
         Returns
         -------
-        viewer : :map:`Renderer`
-            The viewer object.
+        renderer : `menpo3d.visualize.ColouredTriMeshViewer3D`
+            The Menpo3D rendering object.
         """
         if coloured:
             try:
                 from menpo3d.visualize import ColouredTriMeshViewer3d
-                return ColouredTriMeshViewer3d(
-                    figure_id, new_figure, self.points,
-                    self.trilist, self.colours).render(**kwargs)
+                return ColouredTriMeshViewer3d(figure_id, new_figure,
+                                               self.points, self.trilist,
+                                               self.colours).render(
+                    mesh_type=mesh_type, ambient_light=ambient_light,
+                    specular_light=specular_light, normals=normals,
+                    normals_colour=normals_colour,
+                    normals_line_width=normals_line_width,
+                    normals_marker_style=normals_marker_style,
+                    normals_marker_resolution=normals_marker_resolution,
+                    normals_marker_size=normals_marker_size, step=step,
+                    alpha=alpha)
             except ImportError:
                 from menpo.visualize import Menpo3dMissingError
                 raise Menpo3dMissingError()
         else:
-            return super(ColouredTriMesh, self).view(figure_id=figure_id,
-                                                     new_figure=new_figure,
-                                                     **kwargs)
+            from menpo3d.visualize import TriMeshViewer3d
+            return TriMeshViewer3d(figure_id, new_figure,
+                                   self.points, self.trilist).render(
+                mesh_type=mesh_type, line_width=line_width, colour=mesh_colour,
+                normals=normals, normals_colour=normals_colour,
+                normals_line_width=normals_line_width,
+                normals_marker_style=normals_marker_style,
+                normals_marker_resolution=normals_marker_resolution,
+                normals_marker_size=normals_marker_size, step=step, alpha=alpha)
 
     def _view_2d(self, figure_id=None, new_figure=False, image_view=True,
                  render_lines=True, line_colour='r', line_style='-',
