@@ -38,6 +38,10 @@ class TexturedTriMesh(TriMesh):
         else:
             self.texture = texture.copy()
 
+    @property
+    def n_channels(self):
+        return self.texture.n_channels
+
     @classmethod
     def init_2d_grid(cls, shape, spacing=None, tcoords=None, texture=None):
         r"""

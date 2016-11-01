@@ -127,6 +127,10 @@ class ColouredTriMesh(TriMesh):
                    trilist=new_tmesh.trilist,
                    copy=False)
 
+    @property
+    def n_channels(self):
+        return self.colours.shape[1]
+
     def from_mask(self, mask):
         """
         A 1D boolean array with the same number of elements as the number of
