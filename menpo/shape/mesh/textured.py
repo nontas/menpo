@@ -2,6 +2,7 @@ import numpy as np
 
 from menpo.shape import PointCloud
 from menpo.transform import Scale
+from menpo.base import copy_landmarks_and_path
 
 from ..adjacency import mask_adjacency_array, reindex_adjacency_array
 from .base import TriMesh, grid_tcoords
@@ -139,6 +140,26 @@ class TexturedTriMesh(TriMesh):
                    new_tmesh.texture,
                    trilist=new_tmesh.trilist,
                    copy=False)
+
+    def as_trimesh(self, copy=True):
+        r"""
+        Convert this :map:`TexturedTriMesh` to a :map:`TriMesh`, discarding the
+        texture and tcoords.
+
+        Parameters
+        ----------
+        copy : `bool`, optional
+            If ``False``, the produced :map:`TriMesh` will share points and
+            trilist with ``self``. Only suggested to be used for performance.
+
+        Returns
+        -------
+        trimesh : :map:`TriMesh`
+            A trimesh with the same points trilist and landmarks as this shape.
+        """
+        return copy_landmarks_and_path(self, TriMesh(self.points,
+                                                     trilist=self.trilist,
+                                                     copy=copy))
 
     def tcoords_pixel_scaled(self):
         r"""

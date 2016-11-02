@@ -1,5 +1,7 @@
 import numpy as np
 
+from menpo.base import copy_landmarks_and_path
+
 from ..adjacency import mask_adjacency_array, reindex_adjacency_array
 from .base import TriMesh
 
@@ -126,6 +128,26 @@ class ColouredTriMesh(TriMesh):
                    colours=new_tmesh.colours,
                    trilist=new_tmesh.trilist,
                    copy=False)
+
+    def as_trimesh(self, copy=True):
+        r"""
+        Convert this :map:`ColouredTriMesh` to a :map:`TriMesh`, discarding the
+        colors.
+
+        Parameters
+        ----------
+        copy : `bool`, optional
+            If ``False``, the produced :map:`TriMesh` will share points and
+            trilist with ``self``. Only suggested to be used for performance.
+
+        Returns
+        -------
+        trimesh : :map:`TriMesh`
+            A trimesh with the same points trilist and landmarks as this shape.
+        """
+        return copy_landmarks_and_path(self, TriMesh(self.points,
+                                                     trilist=self.trilist,
+                                                     copy=copy))
 
     @property
     def n_channels(self):

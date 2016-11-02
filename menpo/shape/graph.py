@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.sparse import csgraph, csr_matrix, triu
 
+from menpo.base import copy_landmarks_and_path
+
 from . import PointCloud
 
 
@@ -1766,6 +1768,24 @@ class PointGraph(Graph, PointCloud):
                               depth_image.as_vector(keep_channels=True).T]),
                    new_pcloud.adjacency_matrix,
                    copy=False, skip_checks=True)
+
+    def as_pointcloud(self, copy=True):
+        r"""
+        Convert this shape to a basic pointcloud.
+
+        Parameters
+        ----------
+        copy : `bool`, optional
+            If ``False``, the produced :map:`PointCloud` will share points with
+            ``self``. Only suggested to be used for performance.
+
+        Returns
+        -------
+        pointcloud : :map:`PointCloud`
+            An pointcloud with the same points and landmarks as this shape.
+        """
+        return copy_landmarks_and_path(self,
+                                       PointCloud(self.points, copy=copy))
 
     def tojson(self):
         r"""
