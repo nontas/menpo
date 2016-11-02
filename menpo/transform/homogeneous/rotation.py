@@ -256,7 +256,24 @@ class Rotation(DiscreteAffine, Similarity):
             Angle of rotation around axis. Right-handed.
         """
         # TODO vectorizable rotations
-        raise NotImplementedError("Rotations are not yet vectorizable")
+        # VIEW MATRIX PARAMETERS
+        # Euler angles
+        # For the case of cos(theta) != 0, we have two triplets of Euler angles
+        # we will only give one of the two solutions
+        if self.n_dims == 3:
+
+            if self.h_matrix[2, 0] != 1 or self.h_matrix[2, 0] != -1:
+                theta = np.pi + np.arcsin(self.h_matrix[2, 0])
+                varphi = np.arctan2(self.h_matrix[2, 1] / np.cos(theta),
+                                    self.h_matrix[2, 2] / np.cos(theta))
+                phi = np.arctan2(self.h_matrix[1, 0] / np.cos(theta),
+                                 self.h_matrix[0, 0] / np.cos(theta))
+            else:
+                varphi, theta, phi = 0, 0, 0
+
+            return np.array([varphi, theta, phi])
+        else:
+            raise NotImplementedError("Non-3D Rotations are not yet vectorizable")
 
     def _from_vector_inplace(self, p):
         r"""
