@@ -243,6 +243,25 @@ class TexturedTriMesh(TriMesh):
             ttm.tcoords.points = ttm.tcoords.points[isolated_mask, :]
             return ttm
 
+    def with_clipped_texture(self, range=(0., 1.)):
+        """
+        Method that returns a copy of the object with the texture values
+        clipped in range ``(0, 1)``.
+
+        Parameters
+        ----------
+        range : ``(float, float)``, optional
+            The clipping range.
+
+        Returns
+        -------
+        self : :map:`ColouredTriMesh`
+            A copy of self with its texture clipped.
+        """
+        instance = self.copy()
+        instance.texture.pixels = np.clip(self.texture.pixels, *range)
+        return instance
+
     def _view_3d(self, figure_id=None, new_figure=False, textured=True,
                  mesh_type='surface', mesh_colour=(1, 0, 0), line_width=2,
                  ambient_light=0.0, specular_light=0.0, normals=None,
