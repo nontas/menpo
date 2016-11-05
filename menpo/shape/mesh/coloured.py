@@ -151,6 +151,11 @@ class ColouredTriMesh(TriMesh):
 
     @property
     def n_channels(self):
+        r"""
+        The number of channels of colour used (e.g. 3 for RGB).
+
+        :type: `int`
+        """
         return self.colours.shape[1]
 
     def from_mask(self, mask):

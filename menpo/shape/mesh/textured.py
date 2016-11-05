@@ -41,6 +41,11 @@ class TexturedTriMesh(TriMesh):
 
     @property
     def n_channels(self):
+        r"""
+        The number of channels of colour used (e.g. 3 for RGB).
+
+        :type: `int`
+        """
         return self.texture.n_channels
 
     @classmethod
