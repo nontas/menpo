@@ -1,7 +1,10 @@
 from __future__ import division
+from time import time
 import numpy as np
 from scipy.sparse import issparse
 from .linalg import dot_inplace_right
+
+from menpo.visualize import bytes_str
 
 
 def eigenvalue_decomposition(C, is_inverse=False, eps=1e-10):
@@ -328,11 +331,20 @@ def rpca_missing(X, M, lambda_=None, tol=1e-6, max_iter=1000, verbose=False):
     Returns
     -------
     A : ``(n_samples, n_features)`` `ndarray`
-        Low rank basis.
+        Low rank reconstruction
     E : ``(n_samples, n_features)`` `ndarray`
-        Sparse basis.
+        Sparse reconstruction
     """
     m, n = X.shape
+
+    if verbose:
+        print('X {} of type {}: {}'.format(
+            X.shape, X.dtype, bytes_str(X.nbytes)))
+        # Have to allocate 7 arrays (X, Y, A, E, T, Z, V) all of this size
+        # + 4 in temp computations
+        print('Estimated total memory required: {}'.format(bytes_str(X.nbytes
+                                                                     * 11)))
+        t = time()
 
     if lambda_ is None:
         lambda_ = 1. / np.sqrt(m)
@@ -344,7 +356,6 @@ def rpca_missing(X, M, lambda_=None, tol=1e-6, max_iter=1000, verbose=False):
     Y = X * dual_norm_inv
 
     A = np.zeros_like(X)
-    E = np.zeros_like(X)
     notM = ~M
     mu = 1.25 / norm_two
     mu_bar = mu * 1e7
@@ -352,8 +363,8 @@ def rpca_missing(X, M, lambda_=None, tol=1e-6, max_iter=1000, verbose=False):
     sv = 10
     for i in range(1, max_iter + 1):
         T = X - A + (1 / mu) * Y
-        E = (np.maximum(T - lambda_ / mu, 0) +
-             np.minimum(T + lambda_ / mu, 0))
+        E = (np.maximum(T - (lambda_ / mu), 0) +
+             np.minimum(T + (lambda_ / mu), 0))
         E = E * M + T * notM
         U, s, V = np.linalg.svd(X - E + (1 / mu) * Y, full_matrices=False)
 
@@ -367,14 +378,15 @@ def rpca_missing(X, M, lambda_=None, tol=1e-6, max_iter=1000, verbose=False):
         Y += mu * Z
         mu = min(mu * rho, mu_bar)
 
-        stop_criterion = np.linalg.norm(Z, ord='fro') / norm_fro
+        stopping_criterion = np.linalg.norm(Z, ord='fro') / norm_fro
 
-        if verbose and not i % 10:
-            print('{i} r(A): {r_A} |E|_0: {E_0} stop_criterion: {sc}'.format(
-                i=i, r_A=np.linalg.matrix_rank(A),
-                E_0=(np.abs(E) > 0).sum(), sc=stop_criterion))
-
-        if stop_criterion < tol:
+        if verbose and (time() - t > 1):
+            print('{i:02d} ({time:.1f} sec/iter) r(A): {r_A} |E|_0: {E_0} '
+                  'criterion/tol: {sc:.0f} '.format(
+                i=i, r_A=np.linalg.matrix_rank(A), time=time() - t,
+                E_0=(np.abs(E) > 0).sum(), sc=stopping_criterion / tol))
+            t = time()
+        if stopping_criterion < tol:
             if verbose:
                 print('Converged after {} iterations'.format(i))
             break
