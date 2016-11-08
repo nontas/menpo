@@ -3,6 +3,7 @@ import numpy as np
 
 from menpo.base import doc_inherit, name_of_callable
 from menpo.math import pca, pcacov, ipca, as_matrix
+from menpo.visualize import print_progress, bytes_str
 from .linear import MeanLinearVectorModel
 from .vectorizable import VectorizableBackedModel
 
@@ -36,9 +37,10 @@ class PCAVectorModel(MeanLinearVectorModel):
         matrix is copied.
     """
     def __init__(self, samples, centre=True, n_samples=None,
-                 max_n_components=None, inplace=True):
+                 max_n_components=None, inplace=True, verbose=False):
         # Generate data matrix
-        data, self.n_samples = self._data_to_matrix(samples, n_samples)
+        data, self.n_samples = self._data_to_matrix(samples, n_samples,
+                                                    verbose=verbose)
 
         # Compute pca
         e_vectors, e_values, mean = pca(data, centre=centre, inplace=inplace)
@@ -141,15 +143,31 @@ class PCAVectorModel(MeanLinearVectorModel):
         if max_n_components is not None:
             self.trim_components(max_n_components)
 
-    def _data_to_matrix(self, data, n_samples):
+    def _data_to_matrix(self, data, n_samples, verbose=False):
         # build a data matrix from all the samples
         if n_samples is None:
             n_samples = len(data)
         # Assumed data is ndarray of (n_samples, n_features) or list of samples
         if not isinstance(data, np.ndarray):
-            # Make sure we have an array, slice of the number of requested
-            # samples
-            data = np.array(data)[:n_samples]
+            # Data is an iterable.
+            # Look at the first item to learn the shape of a sample
+            sample = data[0]
+            n_features = sample.shape[0]
+            # Allocate a data matrix once and fill it in (very memory efficient
+            # in the common case of a LazyList)
+            data_matrix = np.empty((n_samples, n_features), dtype=sample.dtype)
+            if verbose:
+                print('Allocated data matrix of '
+                      'size {} ({} samples)'.format(bytes_str(data_matrix.nbytes),
+                                                    n_samples))
+            data = data[:n_samples]
+            if verbose:
+                data = print_progress(data, n_items=n_samples, offset=1,
+                                      prefix='Building data matrix')
+            for i, s in enumerate(data):
+                data_matrix[i] = s
+            # This data matrix is the data we need to return
+            data = data_matrix
         return data, n_samples
 
     def __setstate__(self, state):
