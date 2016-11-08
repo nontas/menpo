@@ -267,7 +267,7 @@ class TexturedTriMesh(TriMesh):
         instance.texture.pixels = np.clip(self.texture.pixels, *range)
         return instance
 
-    def _view_3d(self, figure_id=None, new_figure=False, textured=True,
+    def _view_3d(self, figure_id=None, new_figure=True, textured=True,
                  mesh_type='surface', mesh_colour=(1, 0, 0), line_width=2,
                  ambient_light=0.0, specular_light=0.0, normals=None,
                  normals_colour=(0, 0, 0), normals_line_width=2,

@@ -1968,7 +1968,7 @@ class PointGraph(Graph, PointCloud):
             figure_size=figure_size, label=label)
         return renderer
 
-    def _view_3d(self, figure_id=None, new_figure=False, render_lines=True,
+    def _view_3d(self, figure_id=None, new_figure=True, render_lines=True,
                  line_colour=(1, 0, 0), line_width=4, render_markers=True,
                  marker_style='sphere', marker_size=1.0,
                  marker_colour=(1, 0, 0), marker_resolution=8, step=None,

@@ -767,8 +767,8 @@ class PointCloud(Shape):
 
         return landmark_view
 
-    def _view_3d(self, figure_id=None, new_figure=False, marker_style='sphere',
-                 marker_size=1.0, marker_colour=(1, 0, 0), marker_resolution=8,
+    def _view_3d(self, figure_id=None, new_figure=True, marker_style='sphere',
+                 marker_size=None, marker_colour=(1, 0, 0), marker_resolution=8,
                  step=None, alpha=1.0):
         r"""
         Visualization of the PointCloud in 3D.

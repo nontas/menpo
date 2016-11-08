@@ -758,7 +758,7 @@ class TriMesh(PointCloud):
                 axes_y_limits=axes_y_limits, axes_x_ticks=axes_x_ticks,
                 axes_y_ticks=axes_y_ticks, figure_size=figure_size, label=label)
 
-    def _view_3d(self, figure_id=None, new_figure=False, mesh_type='wireframe',
+    def _view_3d(self, figure_id=None, new_figure=True, mesh_type='wireframe',
                  line_width=2, colour=(1, 0, 0), marker_style='sphere',
                  marker_size=0.05, marker_resolution=8, normals=None,
                  normals_colour=(0, 0, 0), normals_line_width=2,
