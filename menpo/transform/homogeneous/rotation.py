@@ -288,7 +288,10 @@ class Rotation(DiscreteAffine, Similarity):
 
     @property
     def n_parameters(self):
-        raise NotImplementedError("Rotations are not yet vectorizable")
+        if self.n_dims == 3:
+            return 4
+        else:
+            raise NotImplementedError("Rotations are not yet vectorizable")
 
     def _as_vector(self):
         r"""
