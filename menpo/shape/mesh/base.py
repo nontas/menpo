@@ -791,10 +791,12 @@ class TriMesh(PointCloud):
                  2dsquare, 2dthick_arrow, 2dthick_cross, 2dtriangle, 2dvertex,
                  arrow, axes, cone, cube, cylinder, point, sphere}
 
-        marker_size : `float`, optional
+        marker_size : `float` or ``None``, optional
             The size of the markers. This size can be seen as a scale factor
             applied to the size markers, which is by default calculated from
-            the inter-marker spacing. It only applies for the 'fancymesh'.
+            the inter-marker spacing. If ``None``, then an optimal marker size
+            value will be set automatically. It only applies for the
+            'fancymesh'.
         marker_resolution : `int`, optional
             The resolution of the markers. For spheres, for instance, this is
             the number of divisions along theta and phi. It only applies for

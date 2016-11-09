@@ -842,10 +842,11 @@ class PointCloud(Shape):
                  2dsquare, 2dthick_arrow, 2dthick_cross, 2dtriangle, 2dvertex,
                  arrow, axes, cone, cube, cylinder, point, sphere}
 
-        marker_size : `float`, optional
+        marker_size : `float` or ``None``, optional
             The size of the markers. This size can be seen as a scale factor
             applied to the size markers, which is by default calculated from
-            the inter-marker spacing.
+            the inter-marker spacing. If ``None``, then an optimal marker size
+            value will be set automatically.
         marker_colour : `(float, float, float)`, optional
             The colour of the markers as a tuple of RGB values.
         marker_resolution : `int`, optional
