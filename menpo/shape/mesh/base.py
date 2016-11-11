@@ -262,6 +262,28 @@ class TriMesh(PointCloud):
                                   skip_checks=skip_checks)
         return copy_landmarks_and_path(self, pg)
 
+    def as_colouredtrimesh(self, colours=None, copy=True):
+        """
+        Converts this to a :map:`ColouredTriMesh`.
+
+        Parameters
+        ----------
+        colours : ``(N, 3)`` `ndarray`, optional
+            The floating point RGB colour per vertex. If not given, grey will be
+            assigned to each vertex.
+        copy : `bool`, optional
+            If ``True``, the graph will be a copy.
+
+        Returns
+        -------
+        coloured : :map:`ColouredTriMesh`
+            A version of this mesh with per-vertex colour assigned.
+        """
+        from .coloured import ColouredTriMesh
+        ctm = ColouredTriMesh(self.points, trilist=self.trilist,
+                              colours=colours, copy=copy)
+        return copy_landmarks_and_path(self, ctm)
+
     def __str__(self):
         return '{}, n_tris: {}'.format(PointCloud.__str__(self),
                                        self.n_tris)

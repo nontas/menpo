@@ -472,12 +472,12 @@ class LazyList(collections.Sequence, Copyable):
         self._callables = callables
 
     def __getitem__(self, slice_):
-        if isinstance(slice_, int) or hasattr(slice_, '__index__'):
-            # PEP 357 and single integer index access - returns element
-            return self._callables[slice_]()
-        elif isinstance(slice_, collections.Iterable):
+        if isinstance(slice_, collections.Iterable):
             # An iterable object is passed - return a new LazyList
             return LazyList([self._callables[s] for s in slice_])
+        elif isinstance(slice_, int) or hasattr(slice_, '__index__'):
+            # PEP 357 and single integer index access - returns element
+            return self._callables[slice_]()
         else:
             # A slice or unknown type is passed - let List handle it
             return LazyList(self._callables[slice_])

@@ -1223,6 +1223,21 @@ class PCAModel(VectorizableBackedModel, PCAVectorModel):
         VectorizableBackedModel.__init__(self, template)
 
     @classmethod
+    def init_from_data_matrix(cls, data, template, centre=True,
+                 max_n_components=None, inplace=True, verbose=False):
+        self = PCAModel.__new__(cls)
+
+        n_samples = data.shape[0]
+
+        PCAVectorModel.__init__(self, data, centre=centre,
+                                max_n_components=max_n_components,
+                                n_samples=n_samples, inplace=inplace,
+                                verbose=verbose)
+        VectorizableBackedModel.__init__(self, template)
+
+        return self
+
+    @classmethod
     def init_from_covariance_matrix(cls, C, mean, n_samples, centred=True,
                                     is_inverse=False, max_n_components=None):
         r"""
