@@ -212,6 +212,35 @@ class ColouredTriMesh(TriMesh):
         instance.colours = np.clip(self.colours, *range)
         return instance
 
+    def with_rescaled_texture(self, minimum, maximum, per_channel=True):
+        r"""A copy of this mesh with colours linearly rescaled to fit a range.
+
+        Parameters
+        ----------
+        minimum: `float`
+            The minimal value of the rescaled colours
+        maximum: `float`
+            The maximal value of the rescaled colours
+        per_channel: `boolean`, optional
+            If ``True``, each channel will be rescaled independently. If
+            ``False``, the scaling will be over all channels.
+
+        Returns
+        -------
+        coloured_mesh : ``type(self)``
+            A copy of this mesh with colours linearly rescaled to fit in the
+            range provided.
+        """
+        instance = self.copy()
+        colours = instance.colours
+        if per_channel:
+            min_, max_ = colours.min(axis=0), colours.max(axis=0)
+        else:
+            min_, max_ = colours.min(), colours.max()
+        sf = ((maximum - minimum) * 1.0) / (max_ - min_)
+        instance.colours = ((colours - min_) * sf) + minimum
+        return instance
+
     def _view_3d(self, figure_id=None, new_figure=True, coloured=True,
                  mesh_type='surface', mesh_colour=(1, 0, 0), line_width=2,
                  ambient_light=0.0, specular_light=0.0, normals=None,
