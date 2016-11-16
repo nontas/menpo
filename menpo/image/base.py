@@ -2711,9 +2711,13 @@ class Image(Vectorizable, Landmarkable, Viewable, LandmarkableViewable):
         return np.squeeze(p)
 
     def __str__(self):
-        return ('{} {}D Image with {} channel{}'.format(
+        s = ('{} {}D Image with {} channel{}'.format(
             self._str_shape(), self.n_dims, self.n_channels,
             's' * (self.n_channels > 1)))
+        if self.has_landmarks:
+            return '\n'.join((s, self.landmarks.__str__()))
+        else:
+            return s
 
     def has_landmarks_outside_bounds(self):
         """

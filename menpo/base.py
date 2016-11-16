@@ -3,6 +3,13 @@ from itertools import chain
 from functools import partial, wraps
 import os.path
 import warnings
+from joblib import Parallel, delayed
+
+
+def parallel_resolve(lazy_list, n_jobs=None, verbose=False):
+    return Parallel(n_jobs=(-1 if n_jobs is None else n_jobs),
+                    verbose=(50 if verbose else False))(
+        delayed(c)() for c in lazy_list._callables)
 
 
 class Copyable(object):
@@ -484,6 +491,34 @@ class LazyList(collections.Sequence, Copyable):
 
     def __len__(self):
         return len(self._callables)
+
+    def __add__(self, other):
+        r"""
+        Create a new LazyList from this list and the given list. The passed list
+        items will be concatenated to the end of this list to give a new
+        LazyList that contains the concatenation of the two lists.
+
+        If a Python list is passed then the elements are wrapped in a function
+        that just returns their values to maintain the callable nature of
+        LazyList elements.
+
+        Parameters
+        ----------
+        other : `collections.Sequence`
+            Sequence to concatenate with this list.
+
+        Returns
+        -------
+        lazy : `LazyList`
+            A new LazyList formed of the concatenation of this list and
+            the ``other`` list.
+        """
+        if isinstance(other, LazyList):
+            return LazyList(self._callables + other._callables)
+        elif isinstance(other, collections.Iterable):
+            return self + LazyList.init_from_iterable(other)
+        else:
+            raise ValueError('Cant add')
 
     @classmethod
     def init_from_iterable(cls, iterable, f=None):

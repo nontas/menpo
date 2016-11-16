@@ -52,7 +52,8 @@ class PCAVectorModel(MeanLinearVectorModel):
 
     @classmethod
     def init_from_covariance_matrix(cls, C, mean, n_samples, centred=True,
-                                    is_inverse=False, max_n_components=None):
+                                    is_inverse=False, max_n_components=None,
+                                    verbose=False):
         r"""
         Build the Principal Component Analysis (PCA) by eigenvalue
         decomposition of the provided covariance/scatter matrix. For details
